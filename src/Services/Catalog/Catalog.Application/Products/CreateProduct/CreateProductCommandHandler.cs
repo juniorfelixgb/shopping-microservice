@@ -2,14 +2,17 @@
 using Catalog.Domain.Entities;
 using Mapster;
 using Marten;
+using Microsoft.Extensions.Logging;
 
 namespace Catalog.Application.Products.CreateProduct;
 internal sealed class CreateProductComandHandler(
     IDocumentSession session) : ICommandHandler<CreateProductCommand, CreateProductResponse>
 {
-    public async Task<CreateProductResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async Task<CreateProductResponse> Handle(CreateProductCommand command, CancellationToken cancellationToken)
     {
-        var product = request.Adapt<Product>();
+        _ = command ?? throw new ArgumentNullException(nameof(command));
+
+        var product = command.Adapt<Product>();
         session.Store(product);
         await session.SaveChangesAsync(cancellationToken);
 

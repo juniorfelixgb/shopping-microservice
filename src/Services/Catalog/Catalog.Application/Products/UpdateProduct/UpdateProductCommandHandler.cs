@@ -7,18 +7,17 @@ using Microsoft.Extensions.Logging;
 namespace Catalog.Application.Products.UpdateProduct;
 
 internal sealed class UpdateProductCommandHandler(
-    IDocumentSession session,
-    ILogger<UpdateProductCommandHandler> logger) : ICommandHandler<UpdateProductCommand, UpdateProductResponse>
+    IDocumentSession session) : ICommandHandler<UpdateProductCommand, UpdateProductResponse>
 {
     public async Task<UpdateProductResponse> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
     {
-        logger.LogInformation("UpdateProductCommandHandler.Handle called with {@Command}", command);
+        _ = command ?? throw new ArgumentNullException(nameof(command));
 
         var product = await session.LoadAsync<Product>(command.Id, cancellationToken);
 
         if (product is null)
         {
-            throw new ProductNotFoundException(command.Id.ToString());
+            throw new ProductNotFoundException(command.Id);
         }
 
         product.Name = command.UpdateProduct.Name;

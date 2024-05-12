@@ -1,9 +1,11 @@
-﻿namespace Catalog.Domain.Exceptions;
+﻿using BuildingBlocks.Exceptions;
 
-public class ProductNotFoundException : Exception
+namespace Catalog.Domain.Exceptions;
+
+public class ProductNotFoundException : NotFoundException
 {
-    public ProductNotFoundException(string productId)
-        : base($"Product with Id: {productId} not found!")
+    public ProductNotFoundException(Guid productId)
+        : base("Product", productId)
     {
         
     }

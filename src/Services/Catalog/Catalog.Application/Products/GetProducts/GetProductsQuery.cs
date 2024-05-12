@@ -2,4 +2,4 @@
 
 namespace Catalog.Application.Products.GetProducts;
 
-public record GetProductsQuery : IQuery<GetProductsResponse>;
+public record GetProductsQuery(GetProductsRequest Request) : IQuery<GetProductsResponse>;

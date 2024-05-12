@@ -1,5 +1,6 @@
 ﻿using Catalog.Domain.Entities;
+using Marten.Pagination;
 
 namespace Catalog.Application.Products.GetProducts;
 
-public record GetProductsResponse(IReadOnlyList<Product>? Products);
+public record GetProductsResponse(IPagedList<Product>? Products);

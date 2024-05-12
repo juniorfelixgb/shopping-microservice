@@ -1,21 +1,18 @@
 ﻿using BuildingBlocks.CQRS;
 using Catalog.Domain.Entities;
 using Marten;
-using Microsoft.Extensions.Logging;
+using Marten.Pagination;
 
 namespace Catalog.Application.Products.GetProducts;
 
 internal sealed class GetProductsQueryHandler(
-    IDocumentSession session,
-    ILogger<GetProductsQueryHandler> logger) : IQueryHandler<GetProductsQuery, GetProductsResponse>
+    IDocumentSession session) : IQueryHandler<GetProductsQuery, GetProductsResponse>
 {
     public async Task<GetProductsResponse> Handle(GetProductsQuery query, CancellationToken cancellationToken)
     {
-        logger.LogInformation("GetProductsQueryHandler.Handle called with {@Query}", query);
-
         var products = await session
             .Query<Product>()
-            .ToListAsync(cancellationToken);
+            .ToPagedListAsync(query.Request.PageNo ?? 1, query.Request.PageSize ?? 10, cancellationToken);
 
         return new GetProductsResponse(products);
     }

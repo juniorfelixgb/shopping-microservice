@@ -1,5 +1,4 @@
 ﻿using Carter;
-using Catalog.Application.Products.CreateProduct;
 using Catalog.Application.Products.GetProducts;
 using MediatR;
 
@@ -10,9 +9,10 @@ namespace Catalog.Api.Endpoints
         public void AddRoutes(IEndpointRouteBuilder app)
         {
             app.MapGet("/products", async (
+                [AsParameters] GetProductsRequest request,
                 ISender sender) =>
             {
-                var result = await sender.Send(new GetProductsQuery());
+                var result = await sender.Send(new GetProductsQuery(request));
                 return Results.Ok(result);
             })
             .WithName("GetProducts")
